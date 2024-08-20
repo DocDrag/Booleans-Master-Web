@@ -3,6 +3,11 @@ import { getRandomInt, getRandomFloat } from "./random.js";
 // เมื่อหน้าเว็บโหลดขึ้นมา ให้ปุ่ม Reset มีชื่อว่า "Start"
 document.addEventListener("DOMContentLoaded", function () {
   const resetBtn = document.getElementById("reset-btn");
+  resetBtn.innerHTML = '<i class="fas fa-random"></i> Start';
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const resetBtn = document.getElementById("reset-btn");
   const resultDiv = document.getElementById("result");
   const modeSelect = document.getElementById("mode-select");
   const totalQuestionsEl = document.getElementById("total-questions");
