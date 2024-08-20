@@ -53,39 +53,46 @@ document.addEventListener("DOMContentLoaded", function () {
     updateScore();
   }
 
+  function generateValue() {
+    let value = getRandomInt(-1000, 1000);
+    if (value < 0) {
+      value = "(" + value + ")";
+    }
+
+    return value
+  }
+
+  function generateBasic(basicQuestions) {
+    let aValue = generateValue();
+    let bValue = generateValue();
+
+    const randomQuestion =
+      basicQuestions[Math.floor(Math.random() * basicQuestions.length)];
+
+    return (aValue + randomQuestion + bValue)
+  }
+
   function generateQuestion() {
     const mode = modeSelect.value;
 
     const basicQuestions = [" == ", " != ", " > ", " < ", " >= ", " <= "];
-    const advancedQuestions = [...basicQuestions, "!"];
-
-    let aValue = getRandomInt(-1000, 1000);
-    let bValue = getRandomInt(-1000, 1000);
-    if (aValue < 0) {
-      aValue = "(" + aValue + ")";
-    }
-    if (bValue < 0) {
-      bValue = "(" + bValue + ")";
-    }
+    const advancedQuestions = [...basicQuestions, "!", "&&", "||"];
 
     if (mode === "basic") {
       // สุ่มเลือกคำถามสำหรับ Basic Mode
-      const randomQuestion =
-        basicQuestions[Math.floor(Math.random() * basicQuestions.length)];
-
-      resultDiv.innerText = aValue + randomQuestion + bValue;
+      resultDiv.innerText = generateBasic(basicQuestions);
     } else if (mode === "advanced") {
       // สุ่มเลือกคำถามสำหรับ Advanced Mode
       const randomQuestion =
         advancedQuestions[Math.floor(Math.random() * advancedQuestions.length)];
 
       if (randomQuestion === "!") {
-        const randomOperator =
-          basicQuestions[Math.floor(Math.random() * basicQuestions.length)];
         resultDiv.innerText =
-          "!" + "(" + aValue + randomOperator + bValue + ")";
+          "!" + "(" + generateBasic(basicQuestions) + ")";
+      } else if (randomQuestion === "&&") {
+        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + "&&" + "(" + generateBasic(basicQuestions) + ")";
       } else {
-        resultDiv.innerText = aValue + randomQuestion + bValue;
+        resultDiv.innerText = generateBasic(basicQuestions);
       }
     }
 
