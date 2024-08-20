@@ -34,15 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   trueBtn.addEventListener("click", () => {
-    
-
+    checkAnswer(true);
     // สุ่มคำถามขึ้นมา
     generateQuestion();
   });
 
   falseBtn.addEventListener("click", () => {
-    
-
+    checkAnswer(false);
     // สุ่มคำถามขึ้นมา
     generateQuestion();
   });
@@ -95,6 +93,24 @@ document.addEventListener("DOMContentLoaded", function () {
     updateScore();
   }
 
+  function checkAnswer(isTrueSelected) {
+    const expression = resultDiv.innerText;
+    let evaluatedResult;
+    try {
+      evaluatedResult = eval(expression);
+    } catch (error) {
+      evaluatedResult = false;
+    }
+
+    if (evaluatedResult === isTrueSelected) {
+      correctAnswers++;
+    } else {
+      incorrectAnswers++;
+    }
+
+    updateScore();
+  }
+
   function updateScore() {
     totalQuestionsEl.textContent = "Total: " + totalQuestions;
     correctAnswersEl.textContent = "Correct: " + correctAnswers;
@@ -104,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateProgressBar() {
+    totalQuestions--;
     const correctPercentage =
       totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
     const incorrectPercentage =
@@ -128,5 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
     withoutProgressBar.style.width = withoutPercentage + "%";
     withoutProgressBar.setAttribute("aria-valuenow", withoutPercentage);
     withoutProgressBar.textContent = Math.round(withoutPercentage) + "%";
+    totalQuestions++;
   }
 });
