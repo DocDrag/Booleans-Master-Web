@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+  const trueBtn = document.getElementById("true-btn");
+  const falseBtn = document.getElementById("false-btn");
   const resetBtn = document.getElementById("reset-btn");
   const resultDiv = document.getElementById("result");
   const modeSelect = document.getElementById("mode-select");
@@ -20,14 +22,26 @@ document.addEventListener("DOMContentLoaded", function () {
   let incorrectAnswers = 0;
   let skipAnswers = 0;
 
-  resetBtn.innerHTML = '<i class="fas fa-random"></i> Start';
-
   resetBtn.addEventListener("click", () => {
     // เปลี่ยนชื่อปุ่มคืนเป็น Reset
     resetBtn.innerHTML = '<i class="fas fa-random"></i> Reset';
 
     // reset คะแนนกลับเป็นค่าเริ่มต้น
     resetGame();
+
+    // สุ่มคำถามขึ้นมา
+    generateQuestion();
+  });
+
+  trueBtn.addEventListener("click", () => {
+    
+
+    // สุ่มคำถามขึ้นมา
+    generateQuestion();
+  });
+
+  falseBtn.addEventListener("click", () => {
+    
 
     // สุ่มคำถามขึ้นมา
     generateQuestion();
