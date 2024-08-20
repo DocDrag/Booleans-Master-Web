@@ -23,10 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
   resetBtn.addEventListener("click", () => {
     // เปลี่ยนชื่อปุ่มคืนเป็น Reset
     resetBtn.innerHTML = '<i class="fas fa-random"></i> Reset';
-
     // reset คะแนนกลับเป็นค่าเริ่มต้น
     resetGame();
-
     // สุ่มคำถามขึ้นมา
     generateQuestion();
   });
@@ -57,10 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function generateValue() {
     let value = getRandomInt(-1000, 1000);
     if (value < 0) {
-      value = "(" + value + ")";
+      value = `(${value})`;
     }
 
-    return value
+    return value;
   }
 
   function generateBasic(basicQuestions) {
@@ -70,41 +68,78 @@ document.addEventListener("DOMContentLoaded", function () {
     const randomQuestion =
       basicQuestions[Math.floor(Math.random() * basicQuestions.length)];
 
-    return (aValue + randomQuestion + bValue)
+    return `${aValue}${randomQuestion}${bValue}`;
+  }
+
+  function generateIntermediate(basicQuestions, intermediateQuestions) {
+    const randomQuestion =
+      intermediateQuestions[Math.floor(Math.random() * intermediateQuestions.length)];
+
+    let text = "";
+
+    if (randomQuestion === "!") {
+      text = `!(${generateBasic(basicQuestions)})`;
+    } else if (randomQuestion === "&&") {
+      text = `(${generateBasic(basicQuestions)}) && (${generateBasic(basicQuestions)})`;
+    } else if (randomQuestion === "||") {
+      text = `(${generateBasic(basicQuestions)}) || (${generateBasic(basicQuestions)})`;
+    } else {
+      text = generateBasic(basicQuestions);
+    }
+
+    return text;
+  }
+
+  // ฟังก์ชันใส่สีให้กับวงเล็บ
+  function colorizeBrackets(expression) {
+    const colors = ["red", "blue", "green", "purple"];
+    let colorIndex = 0;
+    let depth = 0;
+
+    return expression.replace(/[()]/g, (bracket) => {
+      if (bracket === "(") {
+        depth++;
+        colorIndex = (depth - 1) % colors.length;
+        return `<span style="color: ${colors[colorIndex]}">${bracket}</span>`;
+      } else if (bracket === ")") {
+        const coloredBracket = `<span style="color: ${colors[(depth - 1) % colors.length]}">${bracket}</span>`;
+        depth--;
+        return coloredBracket;
+      }
+    });
   }
 
   function generateQuestion() {
     const mode = modeSelect.value;
 
     const basicQuestions = [" == ", " != ", " > ", " < ", " >= ", " <= "];
-    const advancedQuestions = [...basicQuestions, "!", "&&", "||"];
+    const intermediateQuestions = [...basicQuestions, "!", "&&", "||"];
 
+    let question;
     if (mode === "basic") {
-      // สุ่มเลือกคำถามสำหรับ Basic Mode
-      resultDiv.innerText = generateBasic(basicQuestions);
+      question = generateBasic(basicQuestions);
+    } else if (mode === "intermediate") {
+      question = generateIntermediate(basicQuestions, intermediateQuestions);
     } else if (mode === "advanced") {
-      // สุ่มเลือกคำถามสำหรับ Advanced Mode
-      const randomQuestion =
-        advancedQuestions[Math.floor(Math.random() * advancedQuestions.length)];
-
-      if (randomQuestion === "!") {
-        resultDiv.innerText =
-          "!" + "(" + generateBasic(basicQuestions) + ")";
-      } else if (randomQuestion === "&&") {
-        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + " && " + "(" + generateBasic(basicQuestions) + ")";
-      } else if (randomQuestion === "||") {
-        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + " || " + "(" + generateBasic(basicQuestions) + ")";
+      let randomChoice = getRandomFloat(0, 1, 2);
+      if (randomChoice <= 0.33) {
+        question = generateIntermediate(basicQuestions, intermediateQuestions);
+      } else if (randomChoice <= 0.66) {
+        question = `!(${generateIntermediate(basicQuestions, intermediateQuestions)})`;
       } else {
-        resultDiv.innerText = generateBasic(basicQuestions);
+        const advancedQuestions = ["&&", "||"];
+        const randomQuestion = advancedQuestions[Math.floor(Math.random() * advancedQuestions.length)];
+        question = `(${generateIntermediate(basicQuestions, intermediateQuestions)}) ${randomQuestion} (${generateBasic(basicQuestions)})`;
       }
     }
 
+    resultDiv.innerHTML = colorizeBrackets(question);
     totalQuestions++;
     updateScore();
   }
 
   function checkAnswer(isTrueSelected) {
-    const expression = resultDiv.innerText;
+    const expression = resultDiv.innerText.replace(/<[^>]+>/g, ""); // ลบ tag HTML ออกก่อนประเมินผล
     let evaluatedResult;
     try {
       evaluatedResult = eval(expression);
@@ -122,9 +157,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateScore() {
-    totalQuestionsEl.textContent = "Total: " + totalQuestions;
-    correctAnswersEl.textContent = "Correct: " + correctAnswers;
-    incorrectAnswersEl.textContent = "Incorrect: " + incorrectAnswers;
+    totalQuestionsEl.textContent = `Total: ${totalQuestions}`;
+    correctAnswersEl.textContent = `Correct: ${correctAnswers}`;
+    incorrectAnswersEl.textContent = `Incorrect: ${incorrectAnswers}`;
     updateProgressBar();
   }
 
@@ -140,13 +175,13 @@ document.addEventListener("DOMContentLoaded", function () {
       "incorrect-progress-bar"
     );
 
-    correctProgressBar.style.width = correctPercentage + "%";
+    correctProgressBar.style.width = `${correctPercentage}%`;
     correctProgressBar.setAttribute("aria-valuenow", correctPercentage);
-    correctProgressBar.textContent = Math.round(correctPercentage) + "%";
+    correctProgressBar.textContent = `${Math.round(correctPercentage)}%`;
 
-    incorrectProgressBar.style.width = incorrectPercentage + "%";
+    incorrectProgressBar.style.width = `${incorrectPercentage}%`;
     incorrectProgressBar.setAttribute("aria-valuenow", incorrectPercentage);
-    incorrectProgressBar.textContent = Math.round(incorrectPercentage) + "%";
+    incorrectProgressBar.textContent = `${Math.round(incorrectPercentage)}%`;
 
     totalQuestions++;
   }
