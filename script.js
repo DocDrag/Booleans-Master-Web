@@ -15,12 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const totalQuestionsEl = document.getElementById("total-questions");
   const correctAnswersEl = document.getElementById("correct-answers");
   const incorrectAnswersEl = document.getElementById("incorrect-answers");
-  const skipAnswersEl = document.getElementById("skip-answers");
 
   let totalQuestions = 0;
   let correctAnswers = 0;
   let incorrectAnswers = 0;
-  let skipAnswers = 0;
 
   resetBtn.addEventListener("click", () => {
     // เปลี่ยนชื่อปุ่มคืนเป็น Reset
@@ -34,22 +32,25 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   trueBtn.addEventListener("click", () => {
-    checkAnswer(true);
-    // สุ่มคำถามขึ้นมา
-    generateQuestion();
+    if (totalQuestions > 0){
+      checkAnswer(true);
+      // สุ่มคำถามขึ้นมา
+      generateQuestion();
+    }
   });
 
   falseBtn.addEventListener("click", () => {
-    checkAnswer(false);
-    // สุ่มคำถามขึ้นมา
-    generateQuestion();
+    if (totalQuestions > 0){
+      checkAnswer(false);
+      // สุ่มคำถามขึ้นมา
+      generateQuestion();
+    }
   });
 
   function resetGame() {
     totalQuestions = 0;
     correctAnswers = 0;
     incorrectAnswers = 0;
-    skipAnswers = 0;
     updateScore();
   }
 
@@ -90,7 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
         resultDiv.innerText =
           "!" + "(" + generateBasic(basicQuestions) + ")";
       } else if (randomQuestion === "&&") {
-        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + "&&" + "(" + generateBasic(basicQuestions) + ")";
+        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + " && " + "(" + generateBasic(basicQuestions) + ")";
+      } else if (randomQuestion === "||") {
+        resultDiv.innerText = "(" + generateBasic(basicQuestions) + ")" + " || " + "(" + generateBasic(basicQuestions) + ")";
       } else {
         resultDiv.innerText = generateBasic(basicQuestions);
       }
@@ -122,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
     totalQuestionsEl.textContent = "Total: " + totalQuestions;
     correctAnswersEl.textContent = "Correct: " + correctAnswers;
     incorrectAnswersEl.textContent = "Incorrect: " + incorrectAnswers;
-    skipAnswersEl.textContent = "Skip: " + skipAnswers;
     updateProgressBar();
   }
 
@@ -132,14 +134,11 @@ document.addEventListener("DOMContentLoaded", function () {
       totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
     const incorrectPercentage =
       totalQuestions > 0 ? (incorrectAnswers / totalQuestions) * 100 : 0;
-    const withoutPercentage =
-      totalQuestions > 0 ? (skipAnswers / totalQuestions) * 100 : 0;
 
     const correctProgressBar = document.getElementById("correct-progress-bar");
     const incorrectProgressBar = document.getElementById(
       "incorrect-progress-bar"
     );
-    const withoutProgressBar = document.getElementById("without-progress-bar");
 
     correctProgressBar.style.width = correctPercentage + "%";
     correctProgressBar.setAttribute("aria-valuenow", correctPercentage);
@@ -149,9 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
     incorrectProgressBar.setAttribute("aria-valuenow", incorrectPercentage);
     incorrectProgressBar.textContent = Math.round(incorrectPercentage) + "%";
 
-    withoutProgressBar.style.width = withoutPercentage + "%";
-    withoutProgressBar.setAttribute("aria-valuenow", withoutPercentage);
-    withoutProgressBar.textContent = Math.round(withoutPercentage) + "%";
     totalQuestions++;
   }
 });
