@@ -185,4 +185,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     totalQuestions++;
   }
+
+  function changeModeSelect() {
+    resetGame();
+    generateQuestion();
+  }
+
+  modeSelect.addEventListener("change", changeModeSelect);
 });
