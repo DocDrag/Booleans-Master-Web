@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function generateValue() {
-    let value = getRandomInt(-1000, 1000);
+    let value = getRandomInt(-100, 100);
     if (value < 0) {
       value = `(${value})`;
     }
