@@ -521,17 +521,12 @@
 
       if (!buttons || buttons.length === 0) {
         // Fallback default buttons if not yet initialized
-        const defaultLabels = [
-          "Type: int",
-          "Type: float",
-          "Type: char"
+        const defaultBtns = [
+          { id: "true-btn", text: "True", className: "btn btn-success btn-lg" },
+          { id: "false-btn", text: "False", className: "btn btn-danger btn-lg" }
         ];
-        defaultLabels.forEach((label, idx) => {
-          const btn = createButtonElement({
-            id: `box-${idx}`,
-            text: label,
-            className: "btn btn-dark btn-lg"
-          }, isAnswered);
+        defaultBtns.forEach((btnData) => {
+          const btn = createButtonElement(btnData, isAnswered);
           remoteAnswersZone.appendChild(btn);
         });
         return;
