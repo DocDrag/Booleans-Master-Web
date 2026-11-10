@@ -15,6 +15,21 @@
     <div class="container mt-3">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                <div class="d-none justify-content-between align-items-center mb-3" id="teacher-control-bar">
+                    <span class="badge bg-dark px-3 py-2 text-uppercase" style="letter-spacing: 0.05em;">
+                        <i class="fas fa-chalkboard-teacher me-1"></i> Teaching Mode
+                    </span>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary shadow-sm me-1" id="btn-fullscreen" title="เปิด/ปิด เต็มจอ">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary shadow-sm" id="btn-remote-status" data-bs-toggle="modal" data-bs-target="#remoteModal">
+                            <i class="fas fa-mobile-alt me-1"></i> <span id="remote-pill-text">รีโมทมือถือ (Remote)</span>
+                            <span id="remote-badge-count" class="badge bg-secondary ms-1">0</span>
+                        </button>
+                    </div>
+                </div>
+
                 <h1 class="text-center mb-4" id="game-title">Booleans Master</h1>
 
                 <div class="card">
@@ -70,6 +85,70 @@
                             <button id="reset-btn" class="container-fluid btn btn-primary btn-lg">
                                 <i class="fas fa-random"></i> Reset
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remote Connection Modal -->
+    <div class="modal fade" id="remoteModal" tabindex="-1" aria-labelledby="remoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="remoteModalLabel">
+                        <i class="fas fa-mobile-alt me-2"></i> รีโมทควบคุมเกมผ่านมือถือ
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <p class="text-muted mb-3">สแกน QR Code ด้วยมือถือเพื่อกดปุ่มควบคุมระยะไกลขณะเดินสอน</p>
+
+                    <!-- Tabs: Tailscale vs Wi-Fi -->
+                    <ul class="nav nav-pills justify-content-center mb-3" id="remoteTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-tailscale" data-bs-toggle="pill" data-bs-target="#pane-tailscale" type="button" role="tab">
+                                🌐 Tailscale (แนะนำ)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-wifi" data-bs-toggle="pill" data-bs-target="#pane-wifi" type="button" role="tab">
+                                📶 Wi-Fi วงเดียวกัน
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Tailscale Pane -->
+                        <div class="tab-pane fade show active" id="pane-tailscale" role="tabpanel">
+                            <div class="qr-box mb-3 d-flex justify-content-center">
+                                <img id="qr-img-tailscale" src="" alt="Tailscale QR" style="max-width: 190px; height: auto; display: none;" class="img-thumbnail shadow-sm">
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="text" id="url-tailscale" class="form-control text-center font-monospace small" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="btn-copy-tailscale" title="คัดลอก"><i class="fas fa-copy"></i></button>
+                            </div>
+                            <div class="form-text text-success"><i class="fas fa-shield-alt"></i> ควบคุมผ่านเครือข่าย Tailscale สะดวก ไม่จำกัดระยะ</div>
+                        </div>
+
+                        <!-- Wi-Fi Pane -->
+                        <div class="tab-pane fade" id="pane-wifi" role="tabpanel">
+                            <div class="qr-box mb-3 d-flex justify-content-center">
+                                <img id="qr-img-wifi" src="" alt="Wi-Fi QR" style="max-width: 190px; height: auto; display: none;" class="img-thumbnail shadow-sm">
+                            </div>
+                            <div class="input-group mb-2">
+                                <input type="text" id="url-wifi" class="form-control text-center font-monospace small" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="btn-copy-wifi" title="คัดลอก"><i class="fas fa-copy"></i></button>
+                            </div>
+                            <div class="form-text text-muted">ต้องเชื่อมต่อคอมและมือถือเข้า Wi-Fi เดียวกัน</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border mt-3 text-start small mb-0">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-circle text-muted me-2 fs-6" id="modal-status-dot"></i>
+                            <span>สถานะรีโมท: <strong id="modal-status-text">ยังไม่มีเครื่องเชื่อมต่อ (รอสแกน QR Code)</strong></span>
                         </div>
                     </div>
                 </div>

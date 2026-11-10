@@ -55,3 +55,28 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* Remote Click Visual Feedback on PC */
+.remote-click-active {
+    transform: scale(0.95);
+    box-shadow: 0 0 16px rgba(13, 110, 253, 0.9) !important;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Remote Button & Modal Styling */
+#btn-remote-status {
+    border-radius: 20px;
+    font-weight: 600;
+    padding: 5px 14px;
+    transition: all 0.2s ease;
+}
+
+#btn-remote-status:hover {
+    transform: translateY(-1px);
+}
+
+.qr-box img {
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 8px;
+}
